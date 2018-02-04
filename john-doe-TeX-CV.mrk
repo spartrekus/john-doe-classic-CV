@@ -1,0 +1,120 @@
+
+
+\documentclass[fontsize=10pt]{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=2.5cm]{geometry}
+
+\usepackage{xcolor}
+\usepackage{sectsty}
+%\chapterfont{\color{black}}  % sets colour of chapters
+%\sectionfont{\color{black}}  % sets colour of sections
+%\subsectionfont{\color{black}}  % sets colour of sections
+
+
+\RequirePackage{bookman,etoolbox,hyperref,needspace,pifont,tabularx,xcolor}
+\newcommand\ucwords[2][3]{%
+    % Fails gracefully if not in LuaLaTeX
+    \providecommand\directlua[1]{#2}%
+    \directlua{%
+	local minlen = tonumber("#1")
+	local src = "\luaescapestring{\unexpanded{#2}}"
+	local dst = {}
+	% Put a % inside \directlua is tricky as hell. Use char(37)
+	% instead: still no plans for supporting non-ASCII platforms.
+	for w in src:gmatch(string.char(37) .. "S+") do
+	    if w:len() >= minlen then
+		table.insert(dst, w:sub(1,1):upper() .. w:sub(2))
+	    else
+		table.insert(dst, w)
+	    end
+	end
+	tex.print(dst)}}
+
+\pagestyle{empty}
+\setlength\parindent{0pt}
+\color[HTML]{303030} % Default foreground color
+\definecolor{link}{HTML}{506060} % Hyperlinks
+\hypersetup{colorlinks,breaklinks,urlcolor=link,linkcolor=link}
+\setkomafont{disposition}{\color[HTML]{891919}}
+\setkomafont{section}{\scshape\Large\mdseries}
+
+
+
+\makeatletter
+\let\old@section\section
+\renewcommand\section[2][]{%
+    \old@section[#1]{\ucwords{#2}}%
+    \newdimen\raising%
+    \raising=\dimexpr-0.7\baselineskip\relax%
+    \vskip\raising\hrule height 0.4pt\vskip-\raising}
+\makeatother
+
+
+
+
+\newenvironment{eventlist}{%
+    \newcommand*\inskip{}
+    \renewcommand\item[3]{%
+	\inskip%
+	{\raggedleft\textsc{##1}\\[1pt]}
+	\ifstrempty{##2}{}{##2\\[2pt]}
+	{\Large\textit{##3}}
+	\medskip
+	\renewcommand\inskip{\bigskip}}}
+
+\newenvironment{yearlist}{%
+    \renewcommand\item[4][]{%
+	\textsc{##2} & \textbf{##3} \\
+	\ifstrempty{##1}{}{& \textsc{##1} \\}
+	& \textit{##4}\medskip\\}
+    \tabularx{\linewidth}{rX}}
+
+
+\begin{document}
+
+\begin{center}
+	\vskip-\lastskip%
+	{\usekomafont{part} John Doe} \medskip\\
+	{\fontfamily{pzc}\selectfont\Huge Curriculum vitae}
+	\bigskip
+\end{center}
+
+!= General Description
+I am ... 
+
+!= Education
+\begin{yearlist}
+\item{2008 -- 2014}
+     {Programming Education}
+     {bla bla}
+\item{2007 -- 2008}
+    {Computer Sciences}
+    {bla bla}
+
+\item{2007 -- 2008}
+    {Computer Sciences, This is a long line, and relatively long.}
+    {bla bla, this is also a long line and another line }
+
+\item{2001 -- 2007}
+    {Computer Sciences, bla bla bla bla bla bla, bla bla, This is a long line, and relatively long.}
+    {bla bla,bla bla bla bla bla bla, bla bla, this is also a long line and another line }
+\end{yearlist}
+
+
+!= Programming Experience
+\subsection{Language \& Frameworks}
+Java, Spring, Hibernate, C, C++, Visual C++, Python, TestNG, Bash-script, CGI-script, Erlang, GnuMake, Ruby, Perl, Tcl, Jasmin, Assembler, VHDL, PHP, Javascript, XML, HTML, Spin, Promela, GMP, GDK, OpenGL, Swing, LLVM
+\subsection{WEB – AND MOBILE DEVELOPMENT}
+        CSS, HTML5, Javascript
+
+
+\subsection{Architecture \& Design}
+X86, Mips32, MC12, Flex, FPGA, ASIC
+
+\subsection{Databases}
+Oracle, PostGreSQL, PostGis, MySQL
+
+
+
+\end{document}
